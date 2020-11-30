@@ -22,37 +22,44 @@ namespace Financeiro_Pessoal.Controllers
             _context = context;
         }
 
-        // GET: api/Financeiros_
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Financeiro>>> GetFinanceiro()
-        {
-            return await _context.Financeiro.Include(x => x.Categoria).Include(x => x.Individuo).ToListAsync();
-        }
-
-        // GET: api/Financeiros_/5
+        [Route("{action}/{id}")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Financeiro>> GetFinanceiro(int id)
         {
-            var financeiro = await _context.Financeiro.Include(x => x.Categoria).Include(x => x.Individuo).FirstOrDefaultAsync(x => x.ID == id);
+            var financeiro = await GetPesquisar(id.ToString());
+            var titulo = financeiro.Value.FirstOrDefault(x => x.ID == id);
 
-            if (financeiro == null)
-            {
-                return NotFound();
-            }
+            if (titulo == null) return NotFound();
+
+            return titulo;
+        }
+
+        [Route("{action}/{info}")]
+        [HttpGet("{info}")]
+        public async Task<ActionResult<IEnumerable<Financeiro>>> GetPesquisar(string info)
+        {
+            info = API.DecodificarString(info);
+            int id = API.DecodificarID(info);
+
+            var financeiro = await _context.Financeiro
+                .Include(x => x.Categoria)
+                .Include(x => x.Individuo)
+                .Where(x => x.ID == id || x.Descricao.ToLower().Contains(info))
+                .ToListAsync();
 
             return financeiro;
         }
 
-        // PUT: api/Financeiros_/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutFinanceiro(int id, Financeiro financeiro)
         {
-            if (id != financeiro.ID)
-            {
-                return BadRequest();
-            }
+            if (id != financeiro.ID) return BadRequest();
+
+            //Limpando as coleções:
+            financeiro.Categoria = null;
+            financeiro.Individuo = null;
+
+            if (financeiro.IndividuoID == 0) financeiro.IndividuoID = null;
 
             _context.Entry(financeiro).State = EntityState.Modified;
 
@@ -62,22 +69,13 @@ namespace Financeiro_Pessoal.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!FinanceiroExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                if (!FinanceiroExists(id)) return NotFound();
+                else throw;
             }
 
             return NoContent();
         }
 
-        // POST: api/Financeiros_
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Financeiro>> PostFinanceiro(Financeiro financeiro)
         {
@@ -95,15 +93,11 @@ namespace Financeiro_Pessoal.Controllers
             }            
         }
 
-        // DELETE: api/Financeiros_/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Financeiro>> DeleteFinanceiro(int id)
         {
             var financeiro = await _context.Financeiro.FindAsync(id);
-            if (financeiro == null)
-            {
-                return NotFound();
-            }
+            if (financeiro == null) return NotFound();
 
             _context.Financeiro.Remove(financeiro);
             await _context.SaveChangesAsync();

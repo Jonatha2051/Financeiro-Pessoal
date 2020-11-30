@@ -18,7 +18,7 @@
 
         <div class="col-sm-6">
             <label>Telefone</label>
-            <input type="text" @bind="Individuo.Telefone">
+            <input type="text" @bind="Individuo.Telefone" @onfocusout="OnFocusOutTelefone">
         </div>
 
         <div class="col-sm-12">
@@ -39,18 +39,24 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (ID != 0)
-            await Editar();
-        else
-            await Novo();
+        if (ID == 0) Adicao();
+        else await Edicao();
+    }
+
+    private void Adicao()
+    {
+        Individuo = new Individuo();
+    }
+
+    private async Task Edicao()
+    {
+        Individuo = await GetIndividuo(ID);
     }
 
     private async Task Confirmar()
     {
-        if (ID != 0)
-            await Atualizar();
-        else
-            await Salvar();
+        if (ID == 0) await Adicionar();
+        else await Atualizar();
 
         Navigation.NavigateTo("Individuos");
     }
@@ -60,18 +66,7 @@
 
     }
 
-
-    private async Task Novo()
-    {
-        await Task.Run(() => ID = 0);
-    }
-
-    private async Task Editar()
-    {
-        Individuo = await GetIndividuo(ID);
-    }
-
-    private async Task Salvar()
+    private async Task Adicionar()
     {
         await PostIndividuo(Individuo);        
     }
@@ -80,4 +75,11 @@
     {
         await PutIndividuo(Individuo);        
     }
+
+    #region OUTROS
+    private void OnFocusOutTelefone()
+    {
+        Individuo.Telefone = StringFormat.Telefone(Individuo.Telefone);
+    }
+    #endregion
 }

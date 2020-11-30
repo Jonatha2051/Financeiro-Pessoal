@@ -5,37 +5,41 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Financeiro_Pessoal.Migrations
 {
     [DbContext(typeof(AppDb))]
-    [Migration("20201129215937_inicial")]
-    partial class inicial
+    [Migration("20201130134136_Primeira")]
+    partial class Primeira
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.10");
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
+                .HasAnnotation("ProductVersion", "3.1.10")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Financeiro_Pessoal.Models.Categoria", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Descricao")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(20)")
                         .HasMaxLength(20);
 
                     b.Property<bool>("Despesa")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("Receita")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.HasKey("ID");
 
@@ -46,34 +50,47 @@ namespace Financeiro_Pessoal.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("CategoriaID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("DataEmissao")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("DataVencimento")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("character varying(60)")
+                        .HasMaxLength(60);
 
                     b.Property<bool>("Despesa")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<int?>("IndividuoID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Observacoes")
+                        .HasColumnType("character varying(120)")
+                        .HasMaxLength(120);
+
+                    b.Property<bool>("Recebido")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("Receita")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<int>("Sequencia")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int>("SequenciaID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<double>("Valor")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.HasKey("ID");
 
@@ -88,46 +105,25 @@ namespace Financeiro_Pessoal.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(40)")
                         .HasMaxLength(40);
 
                     b.Property<string>("Observacoes")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(120)")
                         .HasMaxLength(120);
 
                     b.Property<string>("Telefone")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(16)")
                         .HasMaxLength(16);
 
                     b.HasKey("ID");
 
                     b.ToTable("Individuos");
-                });
-
-            modelBuilder.Entity("Financeiro_Pessoal.Models.Recibo", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("DataBaixa")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("FinanceiroID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double>("Valor")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("FinanceiroID");
-
-                    b.ToTable("Recibos");
                 });
 
             modelBuilder.Entity("Financeiro_Pessoal.Models.Financeiro", b =>
@@ -141,15 +137,6 @@ namespace Financeiro_Pessoal.Migrations
                     b.HasOne("Financeiro_Pessoal.Models.Individuo", "Individuo")
                         .WithMany()
                         .HasForeignKey("IndividuoID");
-                });
-
-            modelBuilder.Entity("Financeiro_Pessoal.Models.Recibo", b =>
-                {
-                    b.HasOne("Financeiro_Pessoal.Models.Financeiro", "Financeiro")
-                        .WithMany("Recibos")
-                        .HasForeignKey("FinanceiroID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

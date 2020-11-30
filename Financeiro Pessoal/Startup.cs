@@ -25,42 +25,28 @@ namespace Financeiro_Pessoal
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<AppDb>(option => option.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));            
-            services.AddDbContext<AppDb>(option => option.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppDb>(option => option.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))); //Adicionando conexão com PostgreSQL
             services.AddRazorPages();
-            services.AddServerSideBlazor();          
+            services.AddServerSideBlazor();
 
-            // Server Side Blazor doesn't register HttpClient by default
-            if (!services.Any(x => x.ServiceType == typeof(HttpClient)))
+            //Adicionando serviço de HttpClient
+            services.AddScoped<HttpClient>(s =>
             {
-                // Setup HttpClient for server side in a client side compatible fashion
-                services.AddScoped<HttpClient>(s =>
-                {
-                    // Creating the URI helper needs to wait until the JS Runtime is initialized, so defer it.
-                    var uriHelper = s.GetRequiredService<NavigationManager>();
-                    return new HttpClient
-                    {
-                        BaseAddress = new Uri(uriHelper.BaseUri)
-                    };
-                });
-            }
+                var uriHelper = s.GetRequiredService<NavigationManager>();
+                return new HttpClient { BaseAddress = new Uri(uriHelper.BaseUri) };
+                //return new HttpClient();
+            });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 

@@ -9,7 +9,6 @@
 
     <EditForm Model="Financeiro" OnValidSubmit="Confirmar" OnInvalidSubmit="Invalido" class="upsert-form row">
         <DataAnnotationsValidator />
-        <ValidationSummary/>
 
         <div class="col-sm-12">
             <label class="d-block">Tipo de Lançamento</label>
@@ -31,7 +30,6 @@
         <div class="col-sm-6">
             <label>Categoria</label>
             <select @bind="Financeiro.CategoriaID"> 
-                <option value="0">Selecione...</option>
                 @if (Categorias is null)
                 {
                     <p>Carregando...</p>
@@ -72,7 +70,6 @@
         <div class="col-sm-12">
             <label>Individuos</label>
             <select @bind="Financeiro.IndividuoID">  
-                <option value="0">Selecione...</option>
                 @if (Individuos is null)
                 {
                     <p>Carregando...</p>
@@ -116,27 +113,42 @@
 
 @code {
     [Parameter] public int ID { get; set; }
-    public Financeiro Financeiro { get; set; } = new Financeiro();
-    public List<Categoria> Categorias { get; set; } = new List<Categoria>();
-    public List<Individuo> Individuos { get; set; } = new List<Individuo>();
+    public Financeiro Financeiro { get; set; }
+    public List<Categoria> Categorias { get; set; }
+    public List<Individuo> Individuos { get; set; }
 
     public bool QuitarVisivel { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        if (ID != 0)
-            await Editar();
-        else
-            await Novo();
+        if (ID == 0) Adicao();
+        else await Edicao();
 
         await CarregarCategorias();
         await CarregarIndividuos();
     }
 
-    //private async Task CarregarFinanceiro()
-    //{
-    //    Financeiro = new Financeiro();
-    //}
+    private void Adicao()
+    {
+        Financeiro = new Financeiro 
+        {
+            ID = 0,
+            DataEmissao = DateTime.Now,
+            DataVencimento = DateTime.Now,
+            Receita = true
+        };
+    }
+
+    private async Task Edicao()
+    {
+        Financeiro = await GetFinanceiro(ID);
+        if (Financeiro.IndividuoID is null) Financeiro.IndividuoID = 0;
+    }
+
+    private async Task CarregarFinanceiro()
+    {
+        Financeiro = await GetFinanceiro(ID);
+    }
 
     private async Task CarregarCategorias()
     {
@@ -146,17 +158,13 @@
     private async Task CarregarIndividuos()
     {
         Individuos = await GetIndividuos();
+        Individuos.Insert(0, new Individuo { ID = 0, Nome = "Nenhum" });
     }
 
     private async Task Confirmar()
     {
-        Financeiro.Categoria = null;
-        Financeiro.Individuo = null;
-
-        if (ID != 0)
-            await Atualizar();
-        else
-            await Salvar();
+        if (ID == 0) await Adicionar();
+        else await Atualizar();
 
         Navigation.NavigateTo("financeiro");
     }
@@ -166,18 +174,7 @@
 
     }
 
-
-    private async Task Novo()
-    {
-        await Task.Run(() => ID = 0);
-    }
-
-    private async Task Editar()
-    {
-        Financeiro = await GetFinanceiro(ID);
-    }
-
-    private async Task Salvar()
+    private async Task Adicionar()
     {
         await PostFinanceiro(Financeiro);
     }

@@ -14,6 +14,5 @@ namespace Financeiro_Pessoal.Data
         public DbSet<Individuo> Individuos { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Financeiro> Financeiro { get; set; }
-        public DbSet<Recibo> Recibos { get; set; }
     }
 }

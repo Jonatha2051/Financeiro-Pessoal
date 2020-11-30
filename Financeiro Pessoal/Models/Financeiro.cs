@@ -20,14 +20,12 @@ namespace Financeiro_Pessoal.Models
         public int? IndividuoID { get; set; }
         public Individuo Individuo { get; set; }
 
-        [MaxLength(60, ErrorMessage = "Descição não pode ter mais que 60 caracteres")]
+        [MaxLength(60, ErrorMessage = "Descição não pode ter mais que 60 caracteres!")]
         [MinLength(3, ErrorMessage = "Descrição não pode ter menos que 3 caracteres!")]
-        [Required]
+        [Required(ErrorMessage = "Descrição deve ser preenchida!")]
         public string Descricao { get; set; }
 
         public int SequenciaID { get; set; } //ID onde será guardado a chave de ligação entre todos os títulos de determinado lançamento
-
-        public ICollection<Recibo> Recibos { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime DataEmissao { get; set; }
@@ -38,6 +36,8 @@ namespace Financeiro_Pessoal.Models
         public bool Receita { get; set; }
         
         public bool Despesa { get; set; }
+
+        public bool Recebido { get; set; }
 
         public int Sequencia { get; set; }
 

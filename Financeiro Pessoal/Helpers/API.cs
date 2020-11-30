@@ -15,11 +15,9 @@ namespace Financeiro_Pessoal.Helpers
 {
     public class API : ComponentBase
     {
-        //[Inject] protected HttpClient Http { get; set; }
         [Inject] protected NavigationManager Navigation { get; set; }
         [Inject] protected HttpClient Http { get; set; }
 
-        
         public string BaseURI(string url)
         {
             return string.Concat(Navigation.BaseUri, url);
@@ -30,34 +28,19 @@ namespace Financeiro_Pessoal.Helpers
 
         public async Task<Individuo> GetIndividuo(int ID)
         {
-            string strGetApi = $"{IndividuoApi}/{ID}";
-            return await Http.GetFromJsonAsync<Individuo>(strGetApi);
+            string url = $"{IndividuoApi}/GetIndividuo/{ID}";
+            return await Http.GetFromJsonAsync<Individuo>(url);
         }
 
         public async Task<List<Individuo>> GetIndividuos()
-        {           
-            return await Http.GetFromJsonAsync<List<Individuo>>(IndividuoApi);                    
+        {
+            return await GetIndividuosPesquisar(string.Empty);
         }
 
-        public async Task<List<Individuo>> GetIndividuosPesquisa(string info)
+        public async Task<List<Individuo>> GetIndividuosPesquisar(string info)
         {
-            int id;
-
-            if (int.TryParse(info, out id))
-                id = Convert.ToInt32(info);
-            else
-                id = 0;                      
-
-            if (string.IsNullOrEmpty(info))
-            {
-                return await GetIndividuos();
-            }                
-            else
-            {
-                string strInfividuosPesquisa = $"{IndividuoApi}/{id}/{info.ToLower()}";
-                return await Http.GetFromJsonAsync<List<Individuo>>(strInfividuosPesquisa);
-            }
-                
+            string url = $"{IndividuoApi}/GetPesquisar/{CodificarString(info)}";
+            return await Http.GetFromJsonAsync<List<Individuo>>(url);
         }
 
         public async Task PostIndividuo(Individuo individuo)
@@ -77,7 +60,7 @@ namespace Financeiro_Pessoal.Helpers
 
         public async Task<Categoria> GetCategoria(int ID)
         {
-            string strGetApi = $"{CategoriaApi}/{ID}";
+            string strGetApi = $"{CategoriaApi}/GetCategoria/{ID}";
             return await Http.GetFromJsonAsync<Categoria>(strGetApi);
         }
 
@@ -105,17 +88,23 @@ namespace Financeiro_Pessoal.Helpers
         #endregion
 
         #region FINANCEIRO
-        public const string FinanceiroApi = "api/financeiros";
+        public const string FinanceiroApi = "api/financeiro";
 
         public async Task<Financeiro> GetFinanceiro(int ID)
         {
-            string strGetApi = $"{FinanceiroApi}/{ID}";
-            return await Http.GetFromJsonAsync<Financeiro>(strGetApi);
+            string url = $"{FinanceiroApi}/GetFinanceiro/{ID}";
+            return await Http.GetFromJsonAsync<Financeiro>(url);
         }
 
         public async Task<List<Financeiro>> GetFinanceiros()
         {
-            return await Http.GetFromJsonAsync<List<Financeiro>>(FinanceiroApi);
+            return await GetFinanceiroPesquisar(string.Empty);
+        }
+
+        public async Task<List<Financeiro>> GetFinanceiroPesquisar(string info)
+        {
+            string url = $"{FinanceiroApi}/GetPesquisar/{CodificarString(info)}";
+            return await Http.GetFromJsonAsync<List<Financeiro>>(url);
         }
 
         public async Task PostFinanceiro(Financeiro financeiro)

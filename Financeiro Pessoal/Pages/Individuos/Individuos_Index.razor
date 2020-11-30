@@ -58,7 +58,7 @@
 </div>
 
 @code {
-    public List<Individuo> Individuos { get; set; } = new List<Individuo>();
+    public List<Individuo> Individuos { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -68,6 +68,6 @@
     private async Task RecebePesquisa(string info)
     {
         Individuos = null;
-        Individuos = await GetIndividuosPesquisa(info);
+        Individuos = await GetIndividuosPesquisar(info);
     }
 }

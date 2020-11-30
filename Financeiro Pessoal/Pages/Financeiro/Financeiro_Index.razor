@@ -34,7 +34,7 @@
                                     </div>
                                     
                                     <div class="col-sm-7">
-                                        <span class="font-weight-bold">@($"{@titulo.Descricao} | {titulo.Categoria.Descricao} {(titulo.IndividuoID != 0 ? $"- {titulo.Individuo.Nome}" : string.Empty)}")</span>
+                                        <span class="font-weight-bold">@($"{@titulo.Descricao} | {titulo.Categoria.Descricao} {(titulo.IndividuoID != null ? $"- {titulo.Individuo.Nome}" : string.Empty)}")</span>
                                     </div>
 
                                     <div class="col-sm-4 preco">

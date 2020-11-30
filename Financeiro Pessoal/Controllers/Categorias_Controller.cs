@@ -22,12 +22,7 @@ namespace Financeiro_Pessoal.Controllers
             _context = context;
         }
 
-        [HttpGet]        
-        public async Task<ActionResult<IEnumerable<Categoria>>> GetCategorias()
-        {
-            return await GetPesquisar(string.Empty);
-        }
-
+        [Route("{action}/{id}")]     
         [HttpGet("{id}")]
         public async Task<ActionResult<Categoria>> GetCategoria(int id)
         {
@@ -40,7 +35,7 @@ namespace Financeiro_Pessoal.Controllers
         }
 
         [Route("{action}/{info}")]
-        [HttpGet("{info}")]        
+        [HttpGet("{info}")]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetPesquisar(string info)
         {
             info = API.DecodificarString(info);

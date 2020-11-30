@@ -1,0 +1,69 @@
+@page "/categorias"
+@inherits API
+
+<div class="container">
+
+    <div class="index-title">
+        <h2>Categorias</h2>
+        <a href="@(BaseURI("/categorias/adicionar"))">Adicionar</a>
+    </div>
+
+    <div>
+        <Pesquisa PesquisaCallBack="RecebePesquisa" Placeholder="Pesquisa por Descrição e Tipo de Categoria"/>
+    </div>
+
+    <div class="index-list">
+        @if (Categorias is null)
+        {
+            <p>Carrregando...</p>
+        }
+        else if (Categorias.Count() == 0)
+        {
+            <p>Não foram encontradas Categorias!</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var categoria in Categorias)
+                {
+                    <li>
+                        <div class="index-list-item row">
+                            <a href="@(BaseURI($"/categorias/edicao/{categoria.ID}"))" class="col-sm-11">
+                                <div class="row">
+                                    <div class="col-sm-1">
+                                        <img src="@(categoria.Receita ? "/img/positive.png" : "/img/negative.png")" alt="">
+                                    </div>
+                                    <div class="col-sm-11">
+                                        <span>Descrição: </span> @categoria.Descricao
+                                    </div>
+                                </div>
+                            </a>
+
+                            <div class="btn-list col-sm-1">
+                                <button>
+                                    <img src="/img/delete.png" />
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+
+</div>
+
+@code {
+    public List<Categoria> Categorias { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categorias = await GetCategorias();
+    }
+
+    private async Task RecebePesquisa(string info)
+    {
+        Categorias = null;
+        Categorias = await GetCategoriasPesquisar(info);
+    }
+}

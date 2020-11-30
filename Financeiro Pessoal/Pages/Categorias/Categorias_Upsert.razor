@@ -1,0 +1,115 @@
+@page "/categorias/adicionar"
+@page "/categorias/edicao/{id:int}"
+@inherits API
+
+<div class="container">
+    <div class="upsert-form-title">
+        <h1>@(ID == 0 ? "Adição de Categoria" : "Edição de Categoria")</h1>
+    </div>
+
+    <EditForm Model="Categoria" OnValidSubmit="Confirmar" OnInvalidSubmit="Invalido" class="upsert-form row">
+        <DataAnnotationsValidator />
+        <ValidationSummary/>
+
+        <div class="col-sm-12">
+            <label class="d-block">Tipo do Lançamento</label>
+            <div class="upsert-form-radio">
+                <input type="radio" id="categoria-receita" checked="@(Categoria.Receita)" name="Tipo" @onchange="(() => OnChangeTipoCategoria(1))">
+                <label for="categoria-receita">Receita</label>
+            </div>
+
+           <div class="upsert-form-radio">
+                <input type="radio" id="categoria-despesa" checked="@(Categoria.Despesa)" name="Tipo" @onchange="(() => OnChangeTipoCategoria(2))">
+                <label for="categoria-despesa">Despesa</label>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <label>Descrição</label>
+            <input type="text" @bind="Categoria.Descricao">
+        </div>
+
+        <div class="col-sm-6">
+            <label>Status</label>
+            <div class="upsert-form-checkbox">
+                <input type="checkbox" id="categoria-status" @bind="Categoria.Status">
+                <label for="categoria-status">@(Categoria.Status ? "Categoria Ativa" : "Categoria Inativa")</label>
+            </div>
+        </div>
+
+        <div class="col-sm-12 upsert-form-buttons">
+            <button type="submit">@(ID == 0 ? "Salvar" : "Atualizar")</button>
+            <a href="@BaseURI("/categorias")">Listagem</a>
+            @if (ID != 0)
+            {
+                <button type="button">Apagar</button>
+            }
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter] public int ID { get; set; }
+    public Categoria Categoria { get; set; } = new Categoria();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ID != 0)
+            await Editar();
+        else
+            await Novo();
+    }
+
+    private async Task Novo()
+    {
+        await Task.Run(() => {
+            Categoria = new Categoria { ID = 0, Status = true, Receita = true };
+        });
+    }
+
+    private async Task Editar()
+    {
+        Categoria = await GetCategoria(ID);
+    }
+
+    private async Task Confirmar()
+    {
+        if (ID != 0)
+            await Atualizar();
+        else
+            await Salvar();
+
+        Navigation.NavigateTo("categorias");
+    }
+
+    private async Task Invalido(EditContext context)
+    {
+
+    }
+
+    private async Task Salvar()
+    {
+        await PostCategoria(Categoria);
+    }
+
+    private async Task Atualizar()
+    {
+        await PutCategoria(Categoria);
+    }
+
+    private void OnChangeTipoCategoria(int i)
+    {
+        switch (i)
+        {
+            case 1:
+                Categoria.Receita = true;
+                Categoria.Despesa = false;
+                break;
+
+            case 2:
+                Categoria.Receita = false;
+                Categoria.Despesa = true;
+                break;
+        }
+    }
+}

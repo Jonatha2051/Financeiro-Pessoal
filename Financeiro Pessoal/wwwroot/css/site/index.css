@@ -1,0 +1,67 @@
+@import url('variables.css');
+
+.index-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+    .index-title a {
+        border: solid 1px darkgray;
+        border-radius: 5px;
+        padding: .3rem .8rem;
+        color: ivory;
+        background-color: var(--color-purple);
+        text-decoration: none;
+        transition: .2s;
+    }
+    .index-title a:hover {
+        background-color: var(--color-purple-hover);
+    }
+
+.index-list ul {
+    list-style: none;
+    padding: 0;
+}
+    .index-list li {
+        padding: .5rem;
+        border-bottom: solid 1px darkgray;
+        transition: .2s;
+    }
+        .index-list li:hover {
+            background-color: rgb(245, 245, 245);
+        }
+        .index-list li:focus-within {
+            background-color: rgb(245, 245, 245);
+        }
+
+.index-list-item {
+    
+}
+    .index-list-item a {
+        text-decoration: none;
+        color: rgb(97, 1, 84);
+    }
+        .index-list-item a span {
+            color: rgb(133, 131, 131);
+        }
+    .index-list-item button {
+        border: solid 1px darkgray;
+        border-radius: 5px;
+        background-color: transparent;
+        transition: .2s;
+    }
+        .index-list-item button:hover {
+            background-color: var(--color-purple-hover-light);
+            border: solid 1px var(--color-purple-hover-light);
+            box-shadow: 0 0 3px 0 var(--color-purple-hover-light);
+        }
+        .index-list-item button:focus {
+            outline: none !important;
+            background-color: var(--color-purple-hover-light);
+            border: solid 1px var(--color-purple-hover-light);
+            box-shadow: 0 0 3px 0 var(--color-purple-hover-light);
+        }
+
+.btn-list {
+    text-align: right;
+}

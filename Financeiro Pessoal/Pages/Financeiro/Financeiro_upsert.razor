@@ -1,0 +1,204 @@
+@page "/financeiro/adicionar"
+@page "/financeiro/edicao/{id:int}"
+@inherits API
+
+<div class="container">
+    <div class="upsert-form-title">
+        <h1>@(ID == 0 ? "Adição de Financeiro" : "Edição de Financeiro")</h1>
+    </div>
+
+    <EditForm Model="Financeiro" OnValidSubmit="Confirmar" OnInvalidSubmit="Invalido" class="upsert-form row">
+        <DataAnnotationsValidator />
+        <ValidationSummary/>
+
+        <div class="col-sm-12">
+            <label class="d-block">Tipo de Lançamento</label>
+            <div class="upsert-form-radio">
+                <input type="radio" id="financeiroreceita" name="tipoconta" checked=@Financeiro.Receita @onchange="() => OnChangeTipoFinanceiro(1)"/>
+                <label for="financeiroreceita">Receita</label>                
+            </div>            
+            <div class="upsert-form-radio">
+                <input type="radio" id="financeirodespesa" name="tipoconta" checked=@Financeiro.Despesa @onchange="() => OnChangeTipoFinanceiro(2)"/>
+                <label for="financeirodespesa">Despesa</label>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <label>Descrição</label>
+            <input type="text" @bind="Financeiro.Descricao">
+        </div>
+
+        <div class="col-sm-6">
+            <label>Categoria</label>
+            <select @bind="Financeiro.CategoriaID"> 
+                <option value="0">Selecione...</option>
+                @if (Categorias is null)
+                {
+                    <p>Carregando...</p>
+                }
+                else if (Categorias.Count() == 0)
+                {
+                    <p>Não foram encontradas categorias!</p>
+                }
+                else
+                {
+                    foreach (var categoria in Categorias)
+                    {
+                        <option value="@categoria.ID">@categoria.Descricao</option>
+                    }
+                    
+                }
+            </select>
+        </div>
+
+        <div class="col-sm-4">
+            <div>
+                <label>Emissão</label>
+                <input type="date" @bind="Financeiro.DataEmissao"/>
+            </div>
+            
+        </div>
+
+        <div class="col-sm-4">
+            <label>Vencimento</label>
+            <input type="date" @bind="Financeiro.DataVencimento" />
+        </div>
+
+        <div class="col-sm-4">
+            <label>Valor</label>
+            <input type="text" @bind="Financeiro.Valor" />
+        </div>
+
+        <div class="col-sm-12">
+            <label>Individuos</label>
+            <select @bind="Financeiro.IndividuoID">  
+                <option value="0">Selecione...</option>
+                @if (Individuos is null)
+                {
+                    <p>Carregando...</p>
+                }
+                else if (Individuos.Count() == 0)
+                {
+                    <p>Não foram encontrados individuos!</p>
+                }
+                else
+                {
+                    foreach (var individuo in Individuos)
+                    {
+                        <option value="@individuo.ID">@individuo.Nome</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="col-sm-12">
+            <label>Observações</label>
+            <textarea rows="10" @bind="Financeiro.Observacoes"></textarea>
+        </div>
+
+        <div class="col-sm-12 upsert-form-buttons">
+            <button type="submit">@(ID == 0 ? "Adicionar" : "Atualizar")</button>
+            <a href="@BaseURI("/financeiro")">Listagem</a>
+            @if (ID != 0)
+            {
+                <button type="button">Quitar</button>
+                <button type="button">Apagar</button>
+            }
+        </div>
+    </EditForm>
+</div>
+
+<PopUp Titulo="Quitar" Visivel=QuitarVisivel >
+    <PopUpBody>
+        <Quitacao />
+    </PopUpBody>
+</PopUp>
+
+@code {
+    [Parameter] public int ID { get; set; }
+    public Financeiro Financeiro { get; set; } = new Financeiro();
+    public List<Categoria> Categorias { get; set; } = new List<Categoria>();
+    public List<Individuo> Individuos { get; set; } = new List<Individuo>();
+
+    public bool QuitarVisivel { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ID != 0)
+            await Editar();
+        else
+            await Novo();
+
+        await CarregarCategorias();
+        await CarregarIndividuos();
+    }
+
+    //private async Task CarregarFinanceiro()
+    //{
+    //    Financeiro = new Financeiro();
+    //}
+
+    private async Task CarregarCategorias()
+    {
+        Categorias = await GetCategorias();
+    }
+
+    private async Task CarregarIndividuos()
+    {
+        Individuos = await GetIndividuos();
+    }
+
+    private async Task Confirmar()
+    {
+        Financeiro.Categoria = null;
+        Financeiro.Individuo = null;
+
+        if (ID != 0)
+            await Atualizar();
+        else
+            await Salvar();
+
+        Navigation.NavigateTo("financeiro");
+    }
+
+    private async Task Invalido(EditContext context)
+    {
+
+    }
+
+
+    private async Task Novo()
+    {
+        await Task.Run(() => ID = 0);
+    }
+
+    private async Task Editar()
+    {
+        Financeiro = await GetFinanceiro(ID);
+    }
+
+    private async Task Salvar()
+    {
+        await PostFinanceiro(Financeiro);
+    }
+
+    private async Task Atualizar()
+    {
+        await PutFinanceiro(Financeiro);
+    }
+
+    private void OnChangeTipoFinanceiro(int i)
+    {
+        switch (i)
+        {
+            case 1:
+                Financeiro.Despesa = false;
+                Financeiro.Receita = true;
+                break;
+            case 2:
+                Financeiro.Despesa = true;
+                Financeiro.Receita = false;
+                break;
+        }
+    }
+}

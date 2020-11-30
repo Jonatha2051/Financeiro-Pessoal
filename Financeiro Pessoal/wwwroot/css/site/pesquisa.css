@@ -1,0 +1,32 @@
+.pesquisa {
+    border: solid 1px darkgray;
+    border-radius: 5px;
+    display: flex;
+    padding: .2rem .5rem;
+    transition: .2s;
+    margin: 1rem 0;
+}
+    .pesquisa:focus-within {
+        outline: none !important;
+        border-color: #3a0647;
+        box-shadow: 0 0 5px 0px #3a0647;
+    }
+
+.pesquisa input[type="text"] {
+    border: 0 !important;
+    display: inline-block !important;
+}
+    .pesquisa input[type="text"]:focus {
+        border-color: black !important;
+        box-shadow: none !important;
+    }
+
+.pesquisa button {
+    border: 0;
+    background-color: transparent;
+    display: inline-block !important;
+}
+    .pesquisa button:focus {
+        outline: none !important;
+        border: 0;
+    }

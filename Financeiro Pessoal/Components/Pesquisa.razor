@@ -1,0 +1,23 @@
+<div class="pesquisa">
+    <input type="text" @bind="Info" @onkeydown="KeyDown" placeholder=@Placeholder />
+    <button type="button" @onclick="EnviarPesquisa">
+        <img src="/img/search.png" />
+    </button>
+</div>
+
+@code {
+    [Parameter] public string Placeholder { get; set; }
+    [Parameter] public EventCallback<string> PesquisaCallBack { get; set; }
+    public string Info { get; set; }
+
+    private async Task KeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            await EnviarPesquisa();
+    }
+
+    private async Task EnviarPesquisa()
+    {
+        await PesquisaCallBack.InvokeAsync(Info);
+    }
+}

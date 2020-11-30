@@ -1,0 +1,73 @@
+@page "/individuos"
+@inherits API
+
+<div class="container">
+
+    <div class="index-title">
+        <h2>Individuos</h2>
+        <a href="@(BaseURI("/individuos/adicionar"))">Adicionar</a>
+    </div>
+
+    <div>
+        <Pesquisa Placeholder="Nome, Telefone e Observações" PesquisaCallBack="RecebePesquisa"/>
+    </div>
+
+    <div class="index-list">
+        @if (Individuos is null)
+        {
+            <p>Carrregando...</p>
+        }
+        else if (Individuos.Count() == 0)
+        {
+            <p>Não foram encontradas Individuos!</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var individuo in Individuos)
+                {
+                    <li>
+                        <div class="index-list-item row">
+                            <a href="@(BaseURI($"/individuos/edicao/{individuo.ID}"))" class="col-sm-11">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <span>Nome: </span> @individuo.Nome
+                                    </div>
+                                    
+                                    <div class="col-sm-6">
+                                        <span>Telefone:</span> @individuo.Telefone
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                        <small>@individuo.Observacoes</small>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <div class="btn-list col-sm-1">
+                                <button>
+                                    <img src="/img/delete.png" />
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+@code {
+    public List<Individuo> Individuos { get; set; } = new List<Individuo>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Individuos = await GetIndividuos();
+    }
+
+    private async Task RecebePesquisa(string info)
+    {
+        Individuos = null;
+        Individuos = await GetIndividuosPesquisa(info);
+    }
+}

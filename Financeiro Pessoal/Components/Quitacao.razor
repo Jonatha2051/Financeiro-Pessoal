@@ -1,0 +1,26 @@
+<div>
+    <EditForm Model="Financeiro" OnValidSubmit="Confirmar" OnInvalidSubmit="Invalido" class="row">
+        <div>
+            <span>@($"{Financeiro.Descricao} | {Financeiro.Categoria.Descricao}")</span>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter] public Financeiro Financeiro { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Financeiro = new Financeiro();
+    }
+
+    private async Task Confirmar()
+    {
+
+    }
+
+    private async Task Invalido()
+    {
+
+    }
+}

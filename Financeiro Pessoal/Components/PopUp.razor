@@ -1,0 +1,26 @@
+@if (Visivel)
+{
+    <div class="popup">
+        <div class="popup-content">
+            <div class="popup-header">
+                <span>@Titulo</span>
+                <button type="button" class="btn-toggle" @onclick="AlterarVisibilidade">x</button>
+            </div>
+
+            <div class="popup-body">
+                @PopUpBody
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public RenderFragment PopUpBody { get; set; }
+    [Parameter] public bool Visivel { get; set; }
+    [Parameter] public string Titulo { get; set; }
+
+    private void AlterarVisibilidade()
+    {
+        Visivel = false;
+    }
+}

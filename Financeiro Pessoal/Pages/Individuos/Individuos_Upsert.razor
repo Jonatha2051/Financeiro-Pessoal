@@ -1,0 +1,83 @@
+@page "/individuos/adicionar"
+@page "/individuos/edicao/{id:int}"
+@inherits API
+
+<div class="container">
+    <div class="upsert-form-title">
+        <h1>@(ID == 0 ? "Adição de Individuo" : "Edição de Individuo")</h1>
+    </div>
+
+    <EditForm Model="Individuo" OnValidSubmit="Confirmar" OnInvalidSubmit="Invalido" class="upsert-form row">
+        <DataAnnotationsValidator />
+        <ValidationSummary/>
+
+        <div class="col-sm-6">
+            <label>Nome</label>
+            <input type="text" @bind="Individuo.Nome" />
+        </div>
+
+        <div class="col-sm-6">
+            <label>Telefone</label>
+            <input type="text" @bind="Individuo.Telefone">
+        </div>
+
+        <div class="col-sm-12">
+            <label>Observações</label>
+            <textarea cols="30" rows="10" @bind="Individuo.Observacoes" />
+        </div>
+
+        <div class="col-sm-12 upsert-form-buttons">
+            <button type="submit">@(ID != 0 ? "Salvar" : "Adicionar")</button>
+            <a href="@(BaseURI("/Individuos"))">Listagem</a>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter] public int ID { get; set; }
+    public Individuo Individuo { get; set; } = new Individuo();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ID != 0)
+            await Editar();
+        else
+            await Novo();
+    }
+
+    private async Task Confirmar()
+    {
+        if (ID != 0)
+            await Atualizar();
+        else
+            await Salvar();
+
+        Navigation.NavigateTo("Individuos");
+    }
+
+    private async Task Invalido(EditContext context)
+    {
+
+    }
+
+
+    private async Task Novo()
+    {
+        await Task.Run(() => ID = 0);
+    }
+
+    private async Task Editar()
+    {
+        Individuo = await GetIndividuo(ID);
+    }
+
+    private async Task Salvar()
+    {
+        await PostIndividuo(Individuo);        
+    }
+
+    private async Task Atualizar()
+    {
+        await PutIndividuo(Individuo);        
+    }
+}

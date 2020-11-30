@@ -1,0 +1,92 @@
+@page "/financeiro"
+@inherits API
+
+<div class="container">
+    <div class="index-title">
+        <h2>Financeiro</h2>
+        <a href="@(BaseURI("/financeiro/adicionar"))">Adicionar</a>
+    </div>
+
+    <div>
+        <Pesquisa PesquisaCallBack="RecebePesquisa" Placeholder="Pesquisa seu financeiro lançado" />
+    </div>
+
+    <div class="index-list">
+        @if (Financeiro is null)
+        {
+            <p>Carregando...</p>
+        }
+        else if (Financeiro.Count() == 0)
+        {
+            <p>Não foram encontrados títulos!</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var titulo in Financeiro)
+                {
+                    <li>
+                        <div class="index-list-item row">
+                            <a href="@(BaseURI($"/financeiro/edicao/{titulo.ID}"))" class="col-sm-11">
+                                <div class="row">
+                                    <div class="col-sm-1">
+                                        <img src="@(titulo.Receita ? "/img/positive.png" : "/img/negative.png")" alt="">
+                                    </div>
+                                    
+                                    <div class="col-sm-7">
+                                        <span class="font-weight-bold">@($"{@titulo.Descricao} | {titulo.Categoria.Descricao} {(titulo.IndividuoID != 0 ? $"- {titulo.Individuo.Nome}" : string.Empty)}")</span>
+                                    </div>
+
+                                    <div class="col-sm-4 preco">
+                                        <span class="text-weight-bold">@($"R${titulo.Valor.ToString("0.00")}")</span>
+                                    </div>
+
+                                    <div class="col-sm-7 offset-sm-1 small">
+                                        <span>Emissão: @titulo.DataEmissao.ToShortDateString() Vencimento: @titulo.DataVencimento.ToShortDateString()</span>
+                                        
+                                    </div>
+
+                                    <div class="col-sm-4 small">
+                                        <span>@titulo.Observacoes</span>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <div class="btn-list col-sm-1">
+                                <button type="button">Q</button>
+                                <button type="button">
+                                    <img src="/img/delete.png">
+                                </button>
+                            </div>
+                        </div>
+                        
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+<style>
+    .preco {
+        font-size: larger;
+    }
+
+    .small {
+        font-size: small;
+    }
+</style>
+
+@code {
+    public List<Financeiro> Financeiro { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Financeiro = await GetFinanceiros();
+    }
+
+    private async Task RecebePesquisa(string info)
+    {
+
+    }
+}

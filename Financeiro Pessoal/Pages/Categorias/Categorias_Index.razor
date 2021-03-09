@@ -1,18 +1,17 @@
 @page "/categorias"
 @inherits API
 
-<div class="container">
+<main>
+    <section id="index-header">
+        <h1>Categorias</h1>
+        <a href="/categorias/adicao">Adicionar</a>
+    </section>
 
-    <div class="index-title">
-        <h2>Categorias</h2>
-        <a href="/categorias/adicionar">Adicionar</a>
-    </div>
+    <section id="index-search">
+        <Categorias_Pesquisa CallBack="RecebeCategorias" />
+    </section>
 
-    <div>
-        <Pesquisa PesquisaCallBack="RecebePesquisa" Placeholder="Pesquisa por Descrição e Tipo de Categoria"/>
-    </div>
-
-    <div class="index-list">
+    <section id="index-list">
         @if (Categorias is null)
         {
             <p>Carrregando...</p>
@@ -31,7 +30,7 @@
                             <a href="/categorias/edicao/{categoria.ID}" class="col-sm-11">
                                 <div class="row">
                                     <div class="col-sm-1">
-                                        <img src="@(categoria.Receita ? "/img/positive.png" : "/img/negative.png")" alt="">
+                                        @* <img src="@(categoria.Receita ? "/img/positive.png" : "/img/negative.png")" alt=""> *@
                                     </div>
                                     <div class="col-sm-11">
                                         <span>Descrição: </span> @categoria.Descricao
@@ -49,21 +48,14 @@
                 }
             </ul>
         }
-    </div>
-
-</div>
+    </section>
+</main>
 
 @code {
     public List<Categoria> Categorias { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    private void RecebeCategorias(List<Categoria> categorias)
     {
-        Categorias = await GetCategorias();
-    }
-
-    private async Task RecebePesquisa(string info)
-    {
-        Categorias = null;
-        Categorias = await GetCategoriasPesquisar(info);
+        Categorias = categorias;
     }
 }

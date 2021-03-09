@@ -5,16 +5,14 @@ namespace Financeiro_Pessoal.Models
 {
     public class Categoria 
     {
-        [Key] //Chave Primária
+        [Key]
         public int ID { get; set; }
 
-        [MaxLength(20, ErrorMessage = "Descrição não pode ter mais que 20 caracteres")]
-        [MinLength(3, ErrorMessage = "Descrição deve ter pelo menos 3 caracteres!")]
+        [StringLength(30, MinimumLength = 3, ErrorMessage = "Descrição deve ter entre {1} e {2} caracteres!")]
         public string Descricao { get; set; }
 
-        public bool Receita { get; set; }
-
-        public bool Despesa { get; set; }
+        [Range(1, 2, ErrorMessage = "O Tipo de Categoria precisa ser informado!")]
+        public int Tipo { get; set; }
 
         public bool Status { get; set; }
     }

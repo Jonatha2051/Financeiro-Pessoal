@@ -55,18 +55,22 @@ namespace Financeiro_Pessoal.Helpers
 
         public async Task<Categoria> GetCategoria(int ID)
         {
-            string strGetApi = $"{CategoriaApi}/GetCategoria/{ID}";
-            return await Http.GetFromJsonAsync<Categoria>(strGetApi);
+            string url = $"{CategoriaApi}/GetCategoria/{ID}";
+            return await Http.GetFromJsonAsync<Categoria>(url);
         }
 
         public async Task<List<Categoria>> GetCategorias()
         {
-            return await GetCategoriasPesquisar(string.Empty);
+            return await GetCategoriasPesquisar(string.Empty, 0, 0);
         }
 
-        public async Task<List<Categoria>> GetCategoriasPesquisar(string info)
+        public async Task<List<Categoria>> GetCategoriasPesquisar(string info, int tipo, int status)
         {
-            string url = $"{CategoriaApi}/GetPesquisar/{CodificarString(info)}";
+            int id = CodificarInt(info);
+            info = CodificarString(info);
+            string stats = CodificarBoolString(status);
+
+            string url = $"{CategoriaApi}/GetPesquisar/{id}/{info}/{tipo}/{stats}";
             return await Http.GetFromJsonAsync<List<Categoria>>(url);
         }
 
@@ -114,26 +118,31 @@ namespace Financeiro_Pessoal.Helpers
         }
         #endregion
     
-        #region OUTROS
+
+        #region PESQUISA
+        public static int CodificarInt(string info)
+        {
+            int i = 0;
+            int.TryParse(info, out i);
+
+            return i;
+        }
+
         public static string CodificarString(string info)
         {
             if (string.IsNullOrEmpty(info)) return "-";
             else return info.ToLower();
-
         }
 
         public static string DecodificarString(string info)
         {
             if (info == "-") return string.Empty;
-            else return info;
+            else return info.ToLower();
         }
 
-        public static int DecodificarID(string info)
+        public static string CodificarBoolString(int i)
         {
-            int id = 0;
-            int.TryParse(info, out id);
-
-            return id;
+            return i switch { 1 => "true", 2 => "false", _ => "-" };
         }
         #endregion
     }

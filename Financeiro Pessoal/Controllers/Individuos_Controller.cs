@@ -39,7 +39,7 @@ namespace Financeiro_Pessoal.Controllers
         public async Task<ActionResult<IEnumerable<Individuo>>> GetPesquisar(string info)
         {
             info = API.DecodificarString(info);
-            int id = API.DecodificarID(info);
+            int id = 0;
 
             var individuos = await _context.Individuos
                 .Where(x => x.ID == id || x.Nome.ToLower().Contains(info) || x.Telefone.ToLower().Contains(info))

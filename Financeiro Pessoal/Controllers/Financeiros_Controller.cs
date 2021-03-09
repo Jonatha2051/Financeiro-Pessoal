@@ -39,7 +39,7 @@ namespace Financeiro_Pessoal.Controllers
         public async Task<ActionResult<IEnumerable<Financeiro>>> GetPesquisar(string info)
         {
             info = API.DecodificarString(info);
-            int id = API.DecodificarID(info);
+            int id = 0;
 
             var financeiro = await _context.Financeiro
                 .Include(x => x.Categoria)

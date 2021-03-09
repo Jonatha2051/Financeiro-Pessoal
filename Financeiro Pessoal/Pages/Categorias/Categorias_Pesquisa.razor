@@ -1,0 +1,92 @@
+@inherits API
+
+<EditForm Model="Pesquisa" OnValidSubmit="Pesquisar" class="search">
+    <DataAnnotationsValidator />
+
+    <div class="w-6">
+        <label>Pesquisa</label>
+        <input type="text" @bind="Pesquisa.Info">
+    </div>
+
+    <div class="w-2">
+        <label>Tipo</label>
+        <select>
+            <option value="0">Todos</option>
+            <option value="1">Pagar</option>
+            <option value="2">Receber</option>
+        </select>
+    </div>
+    
+    <div class="w-2">
+        <label>Status</label>
+        <select @onchange="TipoOnChange">
+            <option value="0">Todos</option>
+            <option value="1">Ativo</option>
+            <option value="2">Inativo</option>
+        </select>
+    </div>
+    
+    <div class="w-2">
+        <label>Ordem</label>
+        <select>
+            @foreach (var ordem in Listas.OrdemCategorias())
+            {
+                <option value="@ordem.ID">@ordem.Descricao</option>
+            }
+        </select>
+    </div>
+</EditForm>
+
+@code {
+    /* DADOS */
+    [Parameter] public EventCallback<List<Categoria>> CallBack { get; set; }
+    public List<Categoria> Categorias { get; set; }
+
+
+    /* PESQUISA */
+    private PesquisaModel Pesquisa { get; set; }
+    private class PesquisaModel
+    {
+        public string Info { get; set; }
+        public int Tipo { get; set; }
+        public int Status { get; set; }
+        public int Ordem { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Pesquisa = new PesquisaModel { Ordem = 1 };
+        await Pesquisar();
+    }
+
+    private async Task Pesquisar()
+    {
+        Categorias = await GetCategoriasPesquisar(Pesquisa.Info, Pesquisa.Tipo, Pesquisa.Tipo);
+        Ordenar();
+
+        await CallBack.InvokeAsync(Categorias);
+    }
+
+    private async Task TipoOnChange(ChangeEventArgs e)
+    {
+        int id = Convert.ToInt32(e.Value);
+        Pesquisa.Tipo = id;
+
+        await Pesquisar();
+    }
+
+    private void Ordenar()
+    {
+        Categorias = Pesquisa.Ordem switch
+        {
+            2 => Categorias.OrderByDescending(x => x.ID).ToList(),
+            3 => Categorias.OrderBy(x => x.Descricao).ToList(),
+            4 => Categorias.OrderByDescending(x => x.Descricao).ToList(),
+            5 => Categorias.OrderBy(x => x.Tipo).ToList(),
+            6 => Categorias.OrderByDescending(x => x.Tipo).ToList(),
+            7 => Categorias.OrderByDescending(x => x.Status).ToList(),
+            8 => Categorias.OrderBy(x => x.Status).ToList(),
+            _ => Categorias.OrderBy(x => x.ID).ToList()
+        };
+    }
+}

@@ -1,4 +1,4 @@
-@page "/categorias/adicionar"
+@page "/categorias/adicao"
 @page "/categorias/edicao/{id:int}"
 @inherits API
 
@@ -12,16 +12,7 @@
         <ValidationSummary/>
 
         <div class="col-sm-12">
-            <label class="d-block">Tipo do Lançamento</label>
-            <div class="upsert-form-radio">
-                <input type="radio" id="categoria-receita" checked="@(Categoria.Receita)" name="Tipo" @onchange="(() => OnChangeTipoCategoria(1))">
-                <label for="categoria-receita">Receita</label>
-            </div>
-
-           <div class="upsert-form-radio">
-                <input type="radio" id="categoria-despesa" checked="@(Categoria.Despesa)" name="Tipo" @onchange="(() => OnChangeTipoCategoria(2))">
-                <label for="categoria-despesa">Despesa</label>
-            </div>
+            
         </div>
 
         <div class="col-sm-6">
@@ -54,32 +45,26 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (ID != 0)
-            await Editar();
-        else
-            await Novo();
+        if (ID == 0) Adicao();
+        else await Edicao();
     }
 
-    private async Task Novo()
+    private void Adicao()
     {
-        await Task.Run(() => {
-            Categoria = new Categoria { ID = 0, Status = true, Receita = true };
-        });
+        Categoria = new Categoria { ID = 0, Tipo = 0 };
     }
 
-    private async Task Editar()
+    private async Task Edicao()
     {
         Categoria = await GetCategoria(ID);
     }
 
     private async Task Confirmar()
     {
-        if (ID != 0)
-            await Atualizar();
-        else
-            await Salvar();
+        if (ID == 0) await Salvar();
+        else await Atualizar();
 
-        Navigation.NavigateTo("categorias");
+        Navigation.NavigateTo("/categorias");
     }
 
     private async Task Invalido(EditContext context)
@@ -95,21 +80,5 @@
     private async Task Atualizar()
     {
         await PutCategoria(Categoria);
-    }
-
-    private void OnChangeTipoCategoria(int i)
-    {
-        switch (i)
-        {
-            case 1:
-                Categoria.Receita = true;
-                Categoria.Despesa = false;
-                break;
-
-            case 2:
-                Categoria.Receita = false;
-                Categoria.Despesa = true;
-                break;
-        }
     }
 }

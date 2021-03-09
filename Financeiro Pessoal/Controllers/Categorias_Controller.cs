@@ -26,7 +26,7 @@ namespace Financeiro_Pessoal.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Categoria>> GetCategoria(int id)
         {
-            var categorias = await GetPesquisar(id.ToString());
+            var categorias = await GetPesquisar(id, string.Empty, 0, string.Empty);
             var categoria = categorias.Value.FirstOrDefault(x => x.ID == id);
 
             if (categoria == null) return NotFound();
@@ -34,15 +34,17 @@ namespace Financeiro_Pessoal.Controllers
             return categoria;
         }
 
-        [Route("{action}/{info}")]
-        [HttpGet("{info}")]
-        public async Task<ActionResult<IEnumerable<Categoria>>> GetPesquisar(string info)
+        [Route("{action}/{id}/{info}/{tipo}/{status}")]
+        [HttpGet("{id}/{info}/{tipo}/{status}")]
+        public async Task<ActionResult<IEnumerable<Categoria>>> GetPesquisar(int id, string info, int tipo, string status)
         {
             info = API.DecodificarString(info);
-            int id = API.DecodificarID(info);
 
             var categorias = await _context.Categorias
-                .Where(x => x.ID == id || x.Descricao.ToLower().Contains(info))
+                .Where(x => id > 0 ? x.ID == id : x.ID > 0 &&
+                    !string.IsNullOrEmpty(info) ? x.Descricao.ToLower().Contains(info) : !string.IsNullOrEmpty(x.Descricao) &&
+                    tipo > 0 ? x.Tipo == tipo : x.Tipo > 0 &&
+                    status != "-" ? x.Status == Convert.ToBoolean(status) : !string.IsNullOrEmpty(x.Descricao))
                 .ToListAsync();
                                                     
             return categorias;

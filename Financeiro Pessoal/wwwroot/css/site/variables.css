@@ -3,3 +3,8 @@
     --color-purple-hover: #6f0d88;
     --color-purple-hover-light: #c29ee4;
 }
+
+@font-face {
+    font-family: 'Confortaa';
+    src: url('../fonts/Comfortaa-VariableFont_wght.ttf');
+}

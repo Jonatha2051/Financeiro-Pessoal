@@ -2,42 +2,43 @@
 @page "/categorias/edicao/{id:int}"
 @inherits API
 
-<div class="container">
-    <div class="upsert-form-title">
-        <h1>@(ID == 0 ? "Adição de Categoria" : "Edição de Categoria")</h1>
-    </div>
+<main>
+    <h1 class="form-title">@(ID == 0 ? "Adição de Categoria" : "Edição de Categoria")</h1>
 
-    <EditForm Model="Categoria" OnValidSubmit="Confirmar" OnInvalidSubmit="Invalido" class="upsert-form row">
-        <DataAnnotationsValidator />
-        <ValidationSummary/>
+    @if (Categoria is null)
+    {
+        <p class="alerta">Carregando</p>
+    }
+    else
+    {
+        <EditForm Model="Categoria" OnValidSubmit="Confirmar" OnInvalidSubmit="Invalido" class="form">
+            <DataAnnotationsValidator />
 
-        <div class="col-sm-12">
-            
-        </div>
+            <div class="w-8">
+                <label>Descrição</label>
+                <input type="text" @bind="Categoria.Descricao">
+            </div>
 
-        <div class="col-sm-6">
-            <label>Descrição</label>
-            <input type="text" @bind="Categoria.Descricao">
-        </div>
+            <div class="w-2">
+                <label>Tipo</label>
+                <select @bind="Categoria.Tipo">
+                    <option value="1">Receita</option>
+                    <option value="2">Despesa</option>
+                </select>
+            </div>
 
-        <div class="col-sm-6">
-            <label>Status</label>
-            <div class="upsert-form-checkbox">
+            <div class="w-2 div-align">
                 <input type="checkbox" id="categoria-status" @bind="Categoria.Status">
                 <label for="categoria-status">@(Categoria.Status ? "Categoria Ativa" : "Categoria Inativa")</label>
             </div>
-        </div>
-
-        <div class="col-sm-12 upsert-form-buttons">
-            <button type="submit">@(ID == 0 ? "Salvar" : "Atualizar")</button>
-            <a href="/categorias">Listagem</a>
-            @if (ID != 0)
-            {
-                <button type="button">Apagar</button>
-            }
-        </div>
-    </EditForm>
-</div>
+            
+            <div class="w-12">
+                <button type="submit" class="btn-classic">@(ID == 0 ? "Salvar" : "Atualizar")</button>
+                <a href="/categorias" class="btn-classic">Listagem</a>
+            </div>
+        </EditForm>
+    }
+</main>
 
 @code {
     [Parameter] public int ID { get; set; }
@@ -51,7 +52,7 @@
 
     private void Adicao()
     {
-        Categoria = new Categoria { ID = 0, Tipo = 0 };
+        Categoria = new Categoria { Tipo = 0, Status = true };
     }
 
     private async Task Edicao()
@@ -69,7 +70,7 @@
 
     private async Task Invalido(EditContext context)
     {
-
+        await JS.Alerta("Ops!", StringFormat.ContextErrors(context.GetValidationMessages()), "error");
     }
 
     private async Task Salvar()

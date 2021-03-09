@@ -17,6 +17,7 @@ namespace Financeiro_Pessoal.Helpers
     {
         [Inject] protected NavigationManager Navigation { get; set; }
         [Inject] protected HttpClient Http { get; set; }
+        [Inject] protected IJSRuntime JS { get; set; }
 
         #region INDIVÍDUO
         public const string IndividuoApi = "api/individuos";

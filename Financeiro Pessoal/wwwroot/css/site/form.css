@@ -1,77 +1,27 @@
 @import url('variables.css');
 
-.upsert-form label {
-    color: darkgray;
-    margin-top: .5rem;
-    margin-bottom: 0;
+.form {
+    display: flex;
+    flex-wrap: wrap;
 }
 
-.upsert-form input[type="text"]{
-    display: block;
-    margin-bottom: .5rem;
+.form label {
+    color: black;
+    font-size: 1rem;
+    font-weight: 500;
 }
 
-.upsert-form textarea {
-    height: 80px;
+    .form input[type=text] {
+        display: block;
+    }
+
+.form-title {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
 }
 
-    .upsert-form-title h1 {
-        font-size: 1.7rem;
-    }
-
-    .upsert-form-radio {
-        display: inline !important;
-        
-    }
-    .upsert-form-radio:first-child {
-        margin-right: 1rem;
-    }
-    .upsert-form-radio:last-child {
-        margin-left: 1rem;
-    }
-        .upsert-form-radio input[type="radio"]
-        {
-            cursor: pointer;
-        }
-        .upsert-form-radio label {
-            color: black;
-            cursor: pointer;
-        }
-
-    .upsert-form-checkbox {
-
-    }
-        .upsert-form-checkbox input[type="checkbox"]
-        {
-            cursor: pointer;
-        }
-        .upsert-form-checkbox label {
-            color: black;
-            cursor: pointer;
-        }
-    
-    .upsert-form-buttons {
-        display: flex;
-        flex-wrap: wrap;
-    }
-        .upsert-form-buttons:first-child {
-            margin-left: 0;
-        }
-        .upsert-form-buttons:last-child {
-            margin-right: 0;
-        }
-
-        .upsert-form-buttons button, .upsert-form-buttons a {
-            color: ivory;
-            background-color: var(--color-purple);
-            border: solid 1px darkgray;
-            border-radius: 5px;
-            text-decoration: none;
-            margin: .2rem;
-            padding: .3rem .8rem;
-            transition: .2s;
-        }
-            .upsert-form-buttons button:hover, .upsert-form-buttons a:hover {
-                background-color: var(--color-purple-hover);
-                
-            }
+.div-align {
+    margin-top: auto;
+    margin-bottom: .8rem;
+}

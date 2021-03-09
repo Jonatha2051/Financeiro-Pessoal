@@ -9,6 +9,7 @@ namespace Financeiro_Pessoal.Models
         public int ID { get; set; }
 
         [StringLength(30, MinimumLength = 3, ErrorMessage = "Descrição deve ter entre {1} e {2} caracteres!")]
+        [Required(ErrorMessage = "Descrição precisa ser preenchida!")]
         public string Descricao { get; set; }
 
         [Range(1, 2, ErrorMessage = "O Tipo de Categoria precisa ser informado!")]

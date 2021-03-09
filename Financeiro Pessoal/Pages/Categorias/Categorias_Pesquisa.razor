@@ -3,23 +3,23 @@
 <EditForm Model="Pesquisa" OnValidSubmit="Pesquisar" class="search">
     <DataAnnotationsValidator />
 
-    <div class="w-6">
+    <div class="w-5">
         <label>Pesquisa</label>
         <input type="text" @bind="Pesquisa.Info">
     </div>
 
     <div class="w-2">
         <label>Tipo</label>
-        <select>
+        <select @onchange="TipoOnChange">
             <option value="0">Todos</option>
-            <option value="1">Pagar</option>
-            <option value="2">Receber</option>
+            <option value="1">Receita</option>
+            <option value="2">Despesa</option>
         </select>
     </div>
     
     <div class="w-2">
         <label>Status</label>
-        <select @onchange="TipoOnChange">
+        <select>
             <option value="0">Todos</option>
             <option value="1">Ativo</option>
             <option value="2">Inativo</option>
@@ -34,6 +34,12 @@
                 <option value="@ordem.ID">@ordem.Descricao</option>
             }
         </select>
+    </div>
+
+    <div class="w-1 div-align">
+        <button type="submit" class="btn-classic">
+            <span class="fas fa-search"></span>
+        </button>
     </div>
 </EditForm>
 

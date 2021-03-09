@@ -1,0 +1,99 @@
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.around {
+    display: flex;
+    justify-content: space-around;
+}
+
+.center-y {
+    display: flex;
+    align-items: center;
+}
+
+.center-all {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.w-1, .w-2, .w-3, .w-4, .w-5, .w-6, .w-7, .w-8, .w-9, .w-10, .w-11, .w-12 {
+    position: relative;
+    width: 100%;
+}
+
+@media (min-width: 768px)
+{
+
+    .w-1, .w-2, .w-3, .w-4, .w-5, .w-6, .w-7, .w-8, .w-9, .w-10, .w-11, .w-12 {
+        padding: 0 .5rem;
+    }
+
+    .w-1 {
+        flex: 0 0 8.3333%;
+        max-width: 8.3333%;
+    }
+    
+    .w-2 {
+        flex: 0 0 16.6666%;
+        max-width: 16.6666%;
+    }
+    
+    .w-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+    
+    .w-4 {
+        flex: 0 0 33.3333%;
+        max-width: 33.3333%;
+    }
+    
+    .w-5 {
+        flex: 0 0 41.6666%;
+        max-width: 41.6666%;
+    }
+    
+    .w-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    
+    .w-7 {
+        flex: 0 0 58.3333%;
+        max-width: 58.3333%;
+    }
+
+    .w-8 {
+        flex: 0 0 66.6666%;
+        max-width: 66.6666%;
+    }
+
+    .w-9 {
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+
+    .w-10 {
+        flex: 0 0 83.3333%;
+        max-width: 83.3333%;
+    }
+
+    .w-11 {
+        flex: 0 0 91.6666%;
+        max-width: 91.6666%;
+    }
+
+    .w-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}

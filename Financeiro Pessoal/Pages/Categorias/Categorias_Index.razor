@@ -2,23 +2,23 @@
 @inherits API
 
 <main>
-    <section id="index-header">
+    <section class="index-header">
         <h1>Categorias</h1>
-        <a href="/categorias/adicao">Adicionar</a>
+        <a href="/categorias/adicao" class="btn-classic">Adicionar</a>
     </section>
 
-    <section id="index-search">
+    <section>
         <Categorias_Pesquisa CallBack="RecebeCategorias" />
     </section>
 
-    <section id="index-list">
+    <section class="index-list">
         @if (Categorias is null)
         {
-            <p>Carrregando...</p>
+            <p class="alerta">Carrregando...</p>
         }
         else if (Categorias.Count() == 0)
         {
-            <p>Não foram encontradas Categorias!</p>
+            <p class="alerta">Não foram encontradas Categorias!</p>
         }
         else
         {
@@ -26,24 +26,19 @@
                 @foreach (var categoria in Categorias)
                 {
                     <li>
-                        <div class="index-list-item row">
-                            <a href="/categorias/edicao/{categoria.ID}" class="col-sm-11">
-                                <div class="row">
-                                    <div class="col-sm-1">
-                                        @* <img src="@(categoria.Receita ? "/img/positive.png" : "/img/negative.png")" alt=""> *@
-                                    </div>
-                                    <div class="col-sm-11">
-                                        <span>Descrição: </span> @categoria.Descricao
-                                    </div>
-                                </div>
-                            </a>
-
-                            <div class="btn-list col-sm-1">
-                                <button>
-                                    <img src="/img/delete.png" />
-                                </button>
+                        <a href="/categorias/edicao/@categoria.ID">
+                            <div class="w-1">
+                                <span class="@(categoria.Tipo == 1 ? "fas fa-plus" : "fas fa-minus")"></span>
                             </div>
-                        </div>
+
+                            <div class="w-1">
+                                <span>ID: @categoria.ID</span>
+                            </div>
+
+                            <div class="w-10">
+                                <span>Descrição: </span> @categoria.Descricao
+                            </div>
+                        </a>
                     </li>
                 }
             </ul>

@@ -1,0 +1,19 @@
+  
+.search {
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid darkgray;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+}
+
+    .search .div-submit {
+        margin-top: auto;
+        margin-bottom: .8rem;
+    }
+
+@media (max-width: 967.9px) {
+    .search button {
+        width: 100%;
+    }
+}

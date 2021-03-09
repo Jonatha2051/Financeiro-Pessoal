@@ -4,7 +4,7 @@
 <div class="container">
     <div class="index-title">
         <h2>Financeiro</h2>
-        <a href="@(BaseURI("/financeiro/adicionar"))">Adicionar</a>
+        <a href="/financeiro/adicionar">Adicionar</a>
     </div>
 
     <div>
@@ -27,7 +27,7 @@
                 {
                     <li>
                         <div class="index-list-item row">
-                            <a href="@(BaseURI($"/financeiro/edicao/{titulo.ID}"))" class="col-sm-11">
+                            <a href="/financeiro/edicao/{titulo.ID}" class="col-sm-11">
                                 <div class="row">
                                     <div class="col-sm-1">
                                         <img src="@(titulo.Receita ? "/img/positive.png" : "/img/negative.png")" alt="">

@@ -39,7 +39,7 @@
 
         <div class="col-sm-12 upsert-form-buttons">
             <button type="submit">@(ID == 0 ? "Salvar" : "Atualizar")</button>
-            <a href="@BaseURI("/categorias")">Listagem</a>
+            <a href="/categorias">Listagem</a>
             @if (ID != 0)
             {
                 <button type="button">Apagar</button>

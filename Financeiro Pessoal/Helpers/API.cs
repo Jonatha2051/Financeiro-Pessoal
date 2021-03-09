@@ -18,11 +18,6 @@ namespace Financeiro_Pessoal.Helpers
         [Inject] protected NavigationManager Navigation { get; set; }
         [Inject] protected HttpClient Http { get; set; }
 
-        public string BaseURI(string url)
-        {
-            return string.Concat(Navigation.BaseUri, url);
-        }
-
         #region INDIVÍDUO
         public const string IndividuoApi = "api/individuos";
 

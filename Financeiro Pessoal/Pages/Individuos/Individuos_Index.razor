@@ -5,7 +5,7 @@
 
     <div class="index-title">
         <h2>Individuos</h2>
-        <a href="@(BaseURI("/individuos/adicionar"))">Adicionar</a>
+        <a href="/individuos/adicionar">Adicionar</a>
     </div>
 
     <div>
@@ -28,7 +28,7 @@
                 {
                     <li>
                         <div class="index-list-item row">
-                            <a href="@(BaseURI($"/individuos/edicao/{individuo.ID}"))" class="col-sm-11">
+                            <a href="/individuos/edicao/{individuo.ID}" class="col-sm-11">
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <span>Nome: </span> @individuo.Nome
